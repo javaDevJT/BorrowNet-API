@@ -1,6 +1,6 @@
 # BorrowNet-API
 
-## Starting a PostgreSQL DB for the first time
+## Starting a local PostgreSQL DB for the first time
 You should only do this in this manner the first time such that you create your DB container. 
 1. Download and install Docker Desktop
    1. You may need to create an account and/or login

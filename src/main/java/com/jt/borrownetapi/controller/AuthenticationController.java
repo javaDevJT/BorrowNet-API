@@ -1,6 +1,7 @@
 package com.jt.borrownetapi.controller;
 
 import com.jt.borrownetapi.config.JwtProvider;
+import com.jt.borrownetapi.dto.LoginRequest;
 import com.jt.borrownetapi.dto.UserDTO;
 import com.jt.borrownetapi.entity.User;
 import com.jt.borrownetapi.entity.UserPreferences;
@@ -92,7 +93,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signin(@RequestBody User loginRequest) {
+    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest) {
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 

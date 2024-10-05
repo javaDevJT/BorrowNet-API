@@ -4,6 +4,7 @@ package com.jt.borrownetapi.service;
 import com.jt.borrownetapi.dto.PublicUserDTO;
 import com.jt.borrownetapi.dto.UserDTO;
 import com.jt.borrownetapi.dto.UserPreferencesDTO;
+import com.jt.borrownetapi.dto.UserPreferencesPublicDTO;
 import com.jt.borrownetapi.entity.User;
 import com.jt.borrownetapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,7 @@ public class UserService implements UserDetailsService {
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
                     .id(user.getId())
+                    .userPreferences(UserPreferencesPublicDTO.fromUserPreferences(user.getUserPreferences()))
                     .build();
         } else {
             return null;

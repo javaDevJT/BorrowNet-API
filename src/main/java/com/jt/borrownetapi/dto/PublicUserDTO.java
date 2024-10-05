@@ -19,4 +19,5 @@ public class PublicUserDTO {
     private String lastName;
     @NotNull
     private String email;
+    private UserPreferencesPublicDTO userPreferences;
 }

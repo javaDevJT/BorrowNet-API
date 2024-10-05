@@ -1,5 +1,6 @@
 package com.jt.borrownetapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jt.borrownetapi.entity.UserPreferences;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,10 +21,10 @@ public class UserPreferencesDTO {
                 .build();
     }
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
-    @NotNull
     private double borrowDistanceKM = 10.0;
     private String profileDescription;
     @NotNull
-    private byte[] profilePicture;
+    private String profilePicture;
 }

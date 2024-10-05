@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@Profile({"!cloud", "local"})
+@Profile({/*"!cloud", */"local"}) //explicitly require local for this to activate for now
 @EnableMethodSecurity(prePostEnabled = true)
 public class LocalSecurityConfig {
 

@@ -1,7 +1,6 @@
 package com.jt.borrownetapi.service;
 
 
-import com.jt.borrownetapi.controller.UserController;
 import com.jt.borrownetapi.dto.PublicUserDTO;
 import com.jt.borrownetapi.dto.UserDTO;
 import com.jt.borrownetapi.dto.UserPreferencesDTO;
@@ -26,17 +25,10 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserController user;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository=userRepository;
-    }
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmailIgnoreCase(email);
         log.debug(String.valueOf(user));
 
         if(user==null) {
@@ -69,7 +61,7 @@ public class UserService implements UserDetailsService {
 
     public UserDTO getPrivateUserDTO() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User userByEmail = userRepository.findByEmail(userDetails.getUsername());
+        User userByEmail = userRepository.findByEmailIgnoreCase(userDetails.getUsername());
         if (userByEmail == null) {
             throw new RuntimeException("User object does not exist for security context");
         }

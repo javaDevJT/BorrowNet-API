@@ -1,13 +1,18 @@
 package com.jt.borrownetapi.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Table
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserPreferences {
     @Id
     @Column
@@ -19,5 +24,5 @@ public class UserPreferences {
     private String profileDescription;
     @Column
     @NotNull
-    private byte[] profilePicture;
+    private String profilePicture;
 }

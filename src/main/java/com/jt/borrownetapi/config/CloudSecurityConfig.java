@@ -2,6 +2,7 @@ package com.jt.borrownetapi.config;
 
 import com.jt.borrownetapi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,22 +15,29 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@Profile({"cloud"})
+@Profile("!local"/*{"cloud"}*/) //always enable cloud for now
 @EnableMethodSecurity(prePostEnabled = true)
 public class CloudSecurityConfig {
+
+    @Autowired
+    JwtAuthorizationFilter jwtAuthorizationFilter;
 
     //add more here if we want to make security work
     @Bean
     public SecurityFilterChain borrowNetSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         log.info("Security is enabled - Endpoints secured.");
         httpSecurity
-                .authorizeHttpRequests(req -> req.requestMatchers("/", "").permitAll())
+                .authorizeHttpRequests(req -> req.requestMatchers("/", "/auth/**").permitAll())
                 .authorizeHttpRequests(req -> req.anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+                .cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable())
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

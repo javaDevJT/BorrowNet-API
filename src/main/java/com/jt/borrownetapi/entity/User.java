@@ -3,16 +3,17 @@ package com.jt.borrownetapi.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
+@Table(name = "borrownet_user", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class User {
     @Id
     @Column
@@ -29,12 +30,12 @@ public class User {
     private String email;
     @Column
     @NotNull
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,64}$", message = "Password must be: 8 to 64 characters and contain at least one of each of the following: lowercase letter, UPPERCASE LETTER, Digit (0-9), Special character (#?!@$%^&*-)")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @Column
+    @NotNull
     private String role = "ROLE_USER";
-    @JoinColumn
-    @OneToOne(mappedBy = "id", optional = false)
+    @MapsId
+    @OneToOne
     private UserPreferences userPreferences;
 }

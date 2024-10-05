@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
     @NotNull
     private String firstName;

@@ -48,7 +48,7 @@ public class PreferencesService {
         if (userByEmail == null) {
             throw new RuntimeException("User object does not exist for security context");
         }
-        UserPreferences currentPreferences = userByEmail.getUserPreferences();
+        UserPreferences currentPreferences = userByEmail.getUserPreferences() == null ? new UserPreferences(){{setId(userByEmail.getId());}} : userByEmail.getUserPreferences();
         currentPreferences.setProfilePicture(resizeImage(userPreferencesDTO.getProfilePicture()));
         currentPreferences.setProfileDescription(userPreferencesDTO.getProfileDescription());
         currentPreferences.setBorrowDistanceKM(userPreferencesDTO.getBorrowDistanceKM());

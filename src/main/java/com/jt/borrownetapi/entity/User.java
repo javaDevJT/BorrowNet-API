@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Entity
 @Builder
@@ -28,6 +30,8 @@ public class User {
     @Column
     @NotNull
     private String email;
+    @Column
+    private Date date;
     @Column
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

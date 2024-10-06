@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,10 +22,11 @@ public class UserDTO {
     private String lastName;
     @NotNull
     private String email;
+    @NotNull
+    private Date date;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @NotNull
     private String role = "ROLE_USER";
-    @NotNull
     private UserPreferencesDTO userPreferences;
 }

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
 
@@ -19,9 +18,7 @@ import java.util.Date;
 @Table(name = "borrownet_user", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class User {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(generator="borrownet_user_generator")
-    @GenericGenerator(name="borrownet_user_generator" , strategy = "increment")
+    @Column
     private Integer id;
     @Column
     @NotNull

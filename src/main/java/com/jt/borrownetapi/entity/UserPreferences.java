@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserPreferences {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column
     @NotNull

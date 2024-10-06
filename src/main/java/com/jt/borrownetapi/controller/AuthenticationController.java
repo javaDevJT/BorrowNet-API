@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 @RestController
@@ -52,6 +53,7 @@ public class AuthenticationController {
         String password = user.getPassword();
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
+        Date date = user.getDate();
 
         User isEmailExist = userRepository.findByEmailIgnoreCase(email);
         if (isEmailExist != null) {
@@ -75,12 +77,14 @@ public class AuthenticationController {
         createdUser.setFirstName(firstName);
         createdUser.setLastName(lastName);
         createdUser.setPassword(passwordEncoder.encode(password));
+        createdUser.setDate(date);
 
         UserPreferences userPreferences = new UserPreferences();
-        userPreferences.setBorrowDistanceKM(user.getUserPreferences().getBorrowDistanceKM());
-        userPreferences.setProfileDescription(PreferencesService.resizeImage(user.getUserPreferences().getProfileDescription()));
-        userPreferences.setProfilePicture(user.getUserPreferences().getProfilePicture());
-
+        if (user.getUserPreferences() != null) {
+            userPreferences.setBorrowDistanceKM(user.getUserPreferences().getBorrowDistanceKM());
+            userPreferences.setProfileDescription(PreferencesService.resizeImage(user.getUserPreferences().getProfileDescription()));
+            userPreferences.setProfilePicture(user.getUserPreferences().getProfilePicture());
+        }
         userPreferences = userPreferencesRepository.save(userPreferences);
         createdUser.setUserPreferences(userPreferences);
 

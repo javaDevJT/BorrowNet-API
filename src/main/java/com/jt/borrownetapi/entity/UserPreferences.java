@@ -22,7 +22,6 @@ public class UserPreferences {
     private double borrowDistanceKM = 10.0;
     @Column
     private String profileDescription;
-    @NotNull
     @Column(columnDefinition = "VARCHAR(10485760)")
     private String profilePicture;
 }

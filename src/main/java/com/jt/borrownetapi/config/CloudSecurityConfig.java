@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
+
 @Slf4j
 @Configuration
 @EnableWebSecurity
@@ -33,6 +35,7 @@ public class CloudSecurityConfig {
         log.info("Security is enabled - Endpoints secured.");
         httpSecurity
                 .authorizeHttpRequests(req -> req.requestMatchers("/", "/auth/**").permitAll())
+                .authorizeHttpRequests(req -> req.requestMatchers(OPTIONS, "/**").permitAll())
                 .authorizeHttpRequests(req -> req.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .cors(cors -> cors.disable())

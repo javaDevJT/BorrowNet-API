@@ -6,6 +6,7 @@ import com.jt.borrownetapi.dto.UserDTO;
 import com.jt.borrownetapi.entity.User;
 import com.jt.borrownetapi.entity.UserPreferences;
 import com.jt.borrownetapi.model.AuthResponse;
+import com.jt.borrownetapi.model.ExtendedUsernamePasswordAuthenticationToken;
 import com.jt.borrownetapi.repository.UserPreferencesRepository;
 import com.jt.borrownetapi.repository.UserRepository;
 import com.jt.borrownetapi.service.PreferencesService;
@@ -15,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -89,7 +87,7 @@ public class AuthenticationController {
         createdUser.setUserPreferences(userPreferences);
 
         User savedUser = userRepository.save(createdUser);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
+        ExtendedUsernamePasswordAuthenticationToken authentication = new ExtendedUsernamePasswordAuthenticationToken(email, password, firstName, lastName);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = JwtProvider.generateToken(authentication);
 
@@ -110,7 +108,7 @@ public class AuthenticationController {
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        Authentication authentication = authenticate(username, password);
+        ExtendedUsernamePasswordAuthenticationToken authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = JwtProvider.generateToken(authentication);
@@ -126,10 +124,10 @@ public class AuthenticationController {
 
 
 
-    private Authentication authenticate(String email, String password) {
+    private ExtendedUsernamePasswordAuthenticationToken authenticate(String email, String password) {
 
 
-        UserDetails userDetails = customUserDetails.loadUserByUsername(email);
+        User userDetails = customUserDetails.loadUserByUsername(email);
 
 
         if(userDetails == null) {
@@ -139,7 +137,7 @@ public class AuthenticationController {
             throw new BadCredentialsException("Invalid password");
 
         }
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        return new ExtendedUsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities(), userDetails.getFirstName(), userDetails.getLastName());
 
     }
 

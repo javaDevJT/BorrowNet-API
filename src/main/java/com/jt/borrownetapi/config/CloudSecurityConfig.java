@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,7 +36,6 @@ public class CloudSecurityConfig {
                 .authorizeHttpRequests(req -> req.requestMatchers("/", "/auth/**").permitAll())
                 .authorizeHttpRequests(req -> req.requestMatchers(OPTIONS, "/**").permitAll())
                 .authorizeHttpRequests(req -> req.anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);

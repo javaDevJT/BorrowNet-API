@@ -1,12 +1,12 @@
 package com.jt.borrownetapi.config;
 
+import com.jt.borrownetapi.model.ExtendedUsernamePasswordAuthenticationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class JwtProvider {
     private final String TOKEN_HEADER = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
 
-    public static String generateToken(Authentication auth) {
+    public static String generateToken(ExtendedUsernamePasswordAuthenticationToken auth) {
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
         String roles = populateAuthorities(authorities);
         @SuppressWarnings("deprecation")
@@ -34,6 +34,8 @@ public class JwtProvider {
                 .setExpiration(new Date(new Date().getTime()+86400000))
                 .claim("email", auth.getName())
                 .claim( "authorities", roles)
+                .claim("firstName", auth.getFirstName())
+                .claim("lastName", auth.getLastName())
                 .signWith(key)
                 .compact();
         log.debug("Token for parsing in JwtProvider: " + jwt);

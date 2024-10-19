@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -56,12 +57,19 @@ public class PreferencesService {
     }
 
     public static String resizeImage(String base64Image) throws IOException {
-        byte[] bytes = Base64.getDecoder().decode(base64Image);
+        byte[] bytes = Base64.getDecoder().decode(stripHeader(base64Image));
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
         image = scaleImage(image, 500);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "JPG", baos);
         return Base64.getEncoder().encodeToString(baos.toByteArray());
+    }
+
+    public static String stripHeader(String base64String) {
+        if (StringUtils.hasText(base64String) && base64String.startsWith("data:")) {
+            return base64String.split(",")[1];
+        }
+        return base64String;
     }
 
     private static BufferedImage scaleImage(BufferedImage bufferedImage, int size) {

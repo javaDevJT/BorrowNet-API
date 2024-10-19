@@ -24,6 +24,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column
     @NotNull
@@ -43,9 +44,10 @@ public class User implements UserDetails {
     @Column
     @NotNull
     private String role = "ROLE_USER";
-    @MapsId
     @OneToOne
     private UserPreferences userPreferences;
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Posting> postings;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -55,5 +57,15 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public void addPosting(Posting posting) {
+        postings.add(posting);
+        posting.setLender(this);
+    }
+
+    public void removePosting(Posting posting) {
+        postings.remove(posting);
+        posting.setLender(null);
     }
 }

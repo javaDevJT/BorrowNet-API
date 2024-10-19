@@ -16,8 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserPreferences {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
     @Column
     @NotNull
     private double borrowDistanceKM = 10.0;
@@ -25,4 +24,8 @@ public class UserPreferences {
     private String profileDescription;
     @Column(columnDefinition = "VARCHAR(10485760)")
     private String profilePicture;
+    @OneToOne
+    @MapsId("id")
+    @JoinColumn(name = "id")
+    private User user;
 }

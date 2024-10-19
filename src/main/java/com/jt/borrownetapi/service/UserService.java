@@ -3,8 +3,6 @@ package com.jt.borrownetapi.service;
 
 import com.jt.borrownetapi.dto.PublicUserDTO;
 import com.jt.borrownetapi.dto.UserDTO;
-import com.jt.borrownetapi.dto.UserPreferencesDTO;
-import com.jt.borrownetapi.dto.UserPreferencesPublicDTO;
 import com.jt.borrownetapi.entity.User;
 import com.jt.borrownetapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -43,12 +41,7 @@ public class UserService implements UserDetailsService {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return PublicUserDTO.builder().email(user.getEmail())
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .id(user.getId())
-                    .userPreferences(UserPreferencesPublicDTO.fromUserPreferences(user.getUserPreferences()))
-                    .build();
+            return PublicUserDTO.fromUser(user);
         } else {
             return null;
         }
@@ -60,17 +53,6 @@ public class UserService implements UserDetailsService {
         if (userByEmail == null) {
             throw new RuntimeException("User object does not exist for security context");
         }
-        return UserDTO.builder().id(userByEmail.getId())
-                .email(userByEmail.getEmail())
-                .firstName(userByEmail.getFirstName())
-                .lastName(userByEmail.getLastName())
-                .role(userByEmail.getRole())
-                .userPreferences(UserPreferencesDTO.builder()
-                        .id(userByEmail.getUserPreferences().getId())
-                        .borrowDistanceKM(userByEmail.getUserPreferences().getBorrowDistanceKM())
-                        .profilePicture(userByEmail.getUserPreferences().getProfilePicture())
-                        .profileDescription(userByEmail.getUserPreferences().getProfileDescription())
-                        .build())
-                .build();
+        return UserDTO.fromUser(userByEmail);
     }
 }

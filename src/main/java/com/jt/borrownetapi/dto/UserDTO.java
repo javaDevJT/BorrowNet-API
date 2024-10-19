@@ -1,6 +1,7 @@
 package com.jt.borrownetapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jt.borrownetapi.entity.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +30,19 @@ public class UserDTO {
     @NotNull
     private String role = "ROLE_USER";
     private UserPreferencesDTO userPreferences;
+
+    public static UserDTO fromUser(User user) {
+        return UserDTO.builder().id(user.getId())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .role(user.getRole())
+                .userPreferences(UserPreferencesDTO.builder()
+                        .id(user.getUserPreferences().getId())
+                        .borrowDistanceKM(user.getUserPreferences().getBorrowDistanceKM())
+                        .profilePicture(user.getUserPreferences().getProfilePicture())
+                        .profileDescription(user.getUserPreferences().getProfileDescription())
+                        .build())
+                .build();
+    }
 }

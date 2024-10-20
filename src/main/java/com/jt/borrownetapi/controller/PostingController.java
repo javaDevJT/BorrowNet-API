@@ -41,7 +41,7 @@ public class PostingController {
             throw new BadCredentialsException("User is not logged in.");
         } else {
             return new ResponseEntity<>(postingService.getPostings(pageNo, pageSize, sortBy),
-                    HttpStatusCode.valueOf(HttpStatus.ACCEPTED.value()));
+                    HttpStatusCode.valueOf(HttpStatus.OK.value()));
         }
     }
 

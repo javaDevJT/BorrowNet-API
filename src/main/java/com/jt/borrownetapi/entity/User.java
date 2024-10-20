@@ -48,6 +48,14 @@ public class User implements UserDetails {
     private UserPreferences userPreferences;
     @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Posting> postings;
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratingsReceived;
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reportsReceived;
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratingsWritten;
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reportsWritten;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,5 +75,41 @@ public class User implements UserDetails {
     public void removePosting(Posting posting) {
         postings.remove(posting);
         posting.setLender(null);
+    }
+    public void addRatingReceivedToProfile(Rating rating) {
+        ratingsReceived.add(rating);
+        rating.setRatedUser(this);
+    }
+
+    public void removeRatingReceivedFromProfile(Rating rating) {
+        ratingsReceived.remove(rating);
+        rating.setRatedUser(null);
+    }
+    public void addRatingWrittenToProfile(Rating rating) {
+        ratingsWritten.add(rating);
+        rating.setSubmitter(this);
+    }
+
+    public void removeRatingWrittenFromProfile(Rating rating) {
+        ratingsWritten.remove(rating);
+        rating.setSubmitter(null);
+    }
+    public void addReportReceivedToProfile(Report report) {
+        reportsReceived.add(report);
+        report.setReportedUser(this);
+    }
+
+    public void removeReportReceivedFromProfile(Report report) {
+        reportsReceived.remove(report);
+        report.setReportedUser(null);
+    }
+    public void addReportWrittenToProfile(Report report) {
+        reportsWritten.add(report);
+        report.setSubmitter(this);
+    }
+
+    public void removeReportWrittenFromProfile(Report report) {
+        reportsWritten.remove(report);
+        report.setSubmitter(null);
     }
 }

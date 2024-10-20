@@ -5,6 +5,7 @@ import com.jt.borrownetapi.dto.PublicUserDTO;
 import com.jt.borrownetapi.dto.UserDTO;
 import com.jt.borrownetapi.entity.User;
 import com.jt.borrownetapi.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmailIgnoreCase(email);
         log.debug(String.valueOf(user));

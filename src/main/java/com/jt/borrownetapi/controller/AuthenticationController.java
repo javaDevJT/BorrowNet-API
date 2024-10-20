@@ -83,7 +83,6 @@ public class AuthenticationController {
             userPreferences.setProfileDescription(PreferencesService.resizeImage(user.getUserPreferences().getProfileDescription()));
             userPreferences.setProfilePicture(user.getUserPreferences().getProfilePicture());
         }
-        userPreferences = userPreferencesRepository.save(userPreferences);
         createdUser.setUserPreferences(userPreferences);
 
         User savedUser = userRepository.save(createdUser);

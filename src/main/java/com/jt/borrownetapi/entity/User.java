@@ -44,7 +44,7 @@ public class User implements UserDetails {
     @Column
     @NotNull
     private String role = "ROLE_USER";
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UserPreferences userPreferences;
     @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Posting> postings;

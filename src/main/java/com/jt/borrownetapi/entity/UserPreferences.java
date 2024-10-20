@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserPreferences {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column
     @NotNull
@@ -24,8 +25,4 @@ public class UserPreferences {
     private String profileDescription;
     @Column(columnDefinition = "VARCHAR(10485760)")
     private String profilePicture;
-    @OneToOne
-    @MapsId("id")
-    @JoinColumn(name = "id")
-    private User user;
 }

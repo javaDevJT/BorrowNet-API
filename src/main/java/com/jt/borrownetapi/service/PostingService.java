@@ -59,7 +59,7 @@ public class PostingService {
             throw new RuntimeException("User object does not exist for security context");
         }
         Posting posting = fromPostingDTO(postingDTO);
-        posting.setItemPhoto(PreferencesService.resizeImage(posting.getItemPhoto()));
+        posting.setItemPhoto(posting.getItemPhoto() != null ? PreferencesService.resizeImage(posting.getItemPhoto()) : null);
         posting.setLender(userByEmail);
         posting = postingRepository.save(posting);
         userByEmail.addPosting(posting);
@@ -72,9 +72,10 @@ public class PostingService {
                 .itemName(postingDTO.getItemName())
                 .itemDescription(postingDTO.getItemDescription())
                 .itemPhoto(postingDTO.getItemPhoto())
-                .maxRentalHours(postingDTO.getMaxRentalHours())
-                .available(postingDTO.isAvailable())
-                .lender(userRepository.findById(postingDTO.getLender().getId()).get())
+                .maxRentalDays(postingDTO.getMaxRentalDays())
+                .condition(postingDTO.getCondition())
+                .lender((postingDTO.getLender() != null && postingDTO.getLender().getId() != null) ?
+                        userRepository.findById(postingDTO.getLender().getId()).get() : null)
                 .build();
     }
 }

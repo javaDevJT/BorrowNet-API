@@ -1,5 +1,6 @@
 package com.jt.borrownetapi.entity;
 
+import com.jt.borrownetapi.model.enums.Condition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,10 +26,11 @@ public class Posting {
     @Length(max = 500, message = "Item description max length is 500 characters.")
     @Column(nullable = true)
     private String itemDescription;
-    @Column(columnDefinition = "VARCHAR(10485760)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(10485760)", nullable = true)
     private String itemPhoto;
     @Column(nullable = false)
-    private int maxRentalHours;
-    @Column(nullable = false)
-    private boolean available;
+    private int maxRentalDays;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Condition condition;
 }

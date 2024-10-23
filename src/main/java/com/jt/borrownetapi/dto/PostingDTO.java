@@ -2,6 +2,7 @@ package com.jt.borrownetapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jt.borrownetapi.entity.Posting;
+import com.jt.borrownetapi.model.enums.Condition;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +26,9 @@ public class PostingDTO {
     @NotNull
     private String itemPhoto;
     @NotNull
-    private int maxRentalHours;
-    @NotNull
-    private boolean available;
+    private Integer maxRentalDays;
+    private Condition condition;
+
 
     public static PostingDTO fromPosting(Posting posting) {
         return PostingDTO.builder().id(posting.getId())
@@ -35,8 +36,8 @@ public class PostingDTO {
                 .itemName(posting.getItemName())
                 .itemDescription(posting.getItemDescription())
                 .itemPhoto(posting.getItemPhoto())
-                .maxRentalHours(posting.getMaxRentalHours())
-                .available(posting.isAvailable())
+                .maxRentalDays(posting.getMaxRentalDays())
+                .condition(posting.getCondition())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.jt.borrownetapi.service;
 
+import com.jt.borrownetapi.dto.PublicUserDTO;
 import com.jt.borrownetapi.dto.ReportDTO;
 import com.jt.borrownetapi.entity.Report;
 import com.jt.borrownetapi.entity.User;
@@ -24,7 +25,7 @@ public class ReportService {
     @Autowired
     private ReportRepository reportRepository;
 
-    public ReportDTO reportUser(Integer targetId, ReportDTO reportDTO) {
+    public PublicUserDTO reportUser(Integer targetId, ReportDTO reportDTO) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userByEmail = userRepository.findByEmailIgnoreCase(userDetails.getUsername());
         if (userByEmail == null) {
@@ -36,11 +37,9 @@ public class ReportService {
             report.setSubmitter(userByEmail);
             report.setReportedUser(targetUserOptional.get());
             report.getReportedUser().addReportReceivedToProfile(report);
-            userRepository.save(report.getReportedUser());
             report.getSubmitter().addReportWrittenToProfile(report);
-            userRepository.save(report.getSubmitter());
             report = reportRepository.save(report);
-            return ReportDTO.fromReport(report);
+            return PublicUserDTO.fromUser(report.getReportedUser());
         } else {
             throw new EntityNotFoundException("The target user for report does not exist.");
         }
@@ -48,9 +47,13 @@ public class ReportService {
 
     public Report fromReportDTO(ReportDTO reportDTO) {
         return Report.builder().id(reportDTO.getId())
-                .reportedUser(reportDTO.getReportedUser() != null ? userRepository.findById(reportDTO.getReportedUser().getId()).get() : null)
+                .reportedUser(reportDTO.getReportedUser() != null ?
+                        userRepository.findById(reportDTO.getReportedUser()).get() :
+                        null)
                 .reason(reportDTO.getReason())
-                .submitter(reportDTO.getSubmitter() != null ? userRepository.findById(reportDTO.getSubmitter().getId()).get() : null)
+                .submitter(reportDTO.getSubmitter() != null ?
+                        userRepository.findById(reportDTO.getSubmitter()).get() :
+                        null)
                 .details(reportDTO.getDetails())
                 .build();
     }

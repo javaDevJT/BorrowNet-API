@@ -1,5 +1,6 @@
 package com.jt.borrownetapi.service;
 
+import com.jt.borrownetapi.dto.PublicUserDTO;
 import com.jt.borrownetapi.dto.RatingDTO;
 import com.jt.borrownetapi.entity.Rating;
 import com.jt.borrownetapi.entity.User;
@@ -30,7 +31,7 @@ public class RatingService {
     @Autowired
     private RatingRepository ratingRepository;
 
-    public RatingDTO rateUser(Integer targetId, RatingDTO ratingDTO) {
+    public PublicUserDTO rateUser(Integer targetId, RatingDTO ratingDTO) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userByEmail = userRepository.findByEmailIgnoreCase(userDetails.getUsername());
         if (userByEmail == null) {
@@ -42,11 +43,9 @@ public class RatingService {
             rating.setSubmitter(userByEmail);
             rating.setRatedUser(targetUserOptional.get());
             rating.getRatedUser().addRatingReceivedToProfile(rating);
-            userRepository.save(rating.getRatedUser());
             rating.getSubmitter().addRatingWrittenToProfile(rating);
-            userRepository.save(rating.getSubmitter());
             rating = ratingRepository.save(rating);
-            return RatingDTO.fromRating(rating);
+            return PublicUserDTO.fromUser(rating.getRatedUser());
         } else {
             throw new EntityNotFoundException("The target user for rating does not exist.");
         }
@@ -66,9 +65,13 @@ public class RatingService {
 
     public Rating fromRatingDTO(RatingDTO ratingDTO) {
         return Rating.builder().id(ratingDTO.getId())
-                .ratedUser(ratingDTO.getRatedUser() != null ? userRepository.findById(ratingDTO.getRatedUser().getId()).get() : null)
+                .ratedUser(ratingDTO.getRatedUser() != null ?
+                        userRepository.findById(ratingDTO.getRatedUser()).get() :
+                        null)
                 .rating(ratingDTO.getRating())
-                .submitter(ratingDTO.getSubmitter() != null ? userRepository.findById(ratingDTO.getSubmitter().getId()).get() : null)
+                .submitter(ratingDTO.getSubmitter() != null ?
+                        userRepository.findById(ratingDTO.getSubmitter()).get() :
+                        null)
                 .details(ratingDTO.getDetails())
                 .build();
     }

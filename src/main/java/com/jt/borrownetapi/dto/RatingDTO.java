@@ -18,21 +18,21 @@ public class RatingDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private PublicUserDTO ratedUser;
+    private Integer ratedUser;
     @NotNull
     @Pattern(regexp = "[1-5]")
     private Integer rating;
 
-    private PublicUserDTO submitter;
+    private Integer submitter;
     @NotNull
     @Length(max = 500)
     private String details;
 
     public static RatingDTO fromRating(Rating rating) {
         return RatingDTO.builder().id(rating.getId())
-                .ratedUser(PublicUserDTO.fromUser(rating.getRatedUser()))
+                .ratedUser(rating.getRatedUser().getId())
                 .rating(rating.getRating())
-                .submitter(PublicUserDTO.fromUser(rating.getSubmitter()))
+                .submitter(rating.getSubmitter().getId())
                 .details(rating.getDetails())
                 .build();
     }

@@ -1,7 +1,8 @@
 package com.jt.borrownetapi.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +23,9 @@ public class Rating {
     @ManyToOne(optional = false)
     @JoinColumn(referencedColumnName = "id", nullable = false)
     private User ratedUser;
+    @Max(5)
+    @Min(1)
     @Column(nullable = false)
-    @Pattern(regexp = "[1-5]")
     private Integer rating;
     @ManyToOne(optional = false)
     @JoinColumn(referencedColumnName = "id", nullable = false)

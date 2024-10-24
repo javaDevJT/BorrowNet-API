@@ -74,8 +74,9 @@ public class PostingService {
                 .itemPhoto(postingDTO.getItemPhoto())
                 .maxRentalDays(postingDTO.getMaxRentalDays())
                 .condition(postingDTO.getCondition())
-                .lender((postingDTO.getLender() != null && postingDTO.getLender().getId() != null) ?
-                        userRepository.findById(postingDTO.getLender().getId()).get() : null)
+                .lender(postingDTO.getLender() != null ?
+                        userRepository.findById(postingDTO.getLender()).get() :
+                        null)
                 .build();
     }
 }

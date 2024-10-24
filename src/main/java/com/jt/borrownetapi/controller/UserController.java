@@ -53,7 +53,7 @@ public class UserController {
 
     @Transactional
     @PostMapping("{id}/rate")
-    public ResponseEntity<RatingDTO> rateUser(@PathVariable("id") Integer targetId, RatingDTO ratingDTO) {
+    public ResponseEntity<PublicUserDTO> rateUser(@PathVariable("id") Integer targetId, @RequestBody RatingDTO ratingDTO) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userDetails == null) {
             throw new BadCredentialsException("User is not logged in.");
@@ -78,7 +78,7 @@ public class UserController {
 
     @Transactional
     @PostMapping("{id}/report")
-    public ResponseEntity<ReportDTO> reportUser(@PathVariable("id") Integer targetId, ReportDTO reportDTO) {
+    public ResponseEntity<PublicUserDTO> reportUser(@PathVariable("id") Integer targetId, @RequestBody ReportDTO reportDTO) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userDetails == null) {
             throw new BadCredentialsException("User is not logged in.");

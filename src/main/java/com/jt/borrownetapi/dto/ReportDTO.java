@@ -18,20 +18,20 @@ public class ReportDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private PublicUserDTO reportedUser;
+    private Integer reportedUser;
     @NotNull
     private Reason reason;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private PublicUserDTO submitter;
+    private Integer submitter;
     @NotNull
     @Length(max = 500)
     private String details;
 
     public static ReportDTO fromReport(Report report) {
         return ReportDTO.builder().id(report.getId())
-                .reportedUser(PublicUserDTO.fromUser(report.getReportedUser()))
+                .reportedUser(report.getReportedUser().getId())
                 .reason(report.getReason())
-                .submitter(PublicUserDTO.fromUser(report.getSubmitter()))
+                .submitter(report.getSubmitter().getId())
                 .details(report.getDetails())
                 .build();
     }

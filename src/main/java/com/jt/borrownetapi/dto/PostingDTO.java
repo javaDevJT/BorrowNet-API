@@ -18,7 +18,7 @@ public class PostingDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
     @NotNull
-    private PublicUserDTO lender;
+    private Integer lender;
     @NotNull
     private String itemName;
     @Length(max = 500, message = "Item description max length is 500 characters.")
@@ -32,7 +32,7 @@ public class PostingDTO {
 
     public static PostingDTO fromPosting(Posting posting) {
         return PostingDTO.builder().id(posting.getId())
-                .lender(PublicUserDTO.fromUser(posting.getLender()))
+                .lender(posting.getLender().getId())
                 .itemName(posting.getItemName())
                 .itemDescription(posting.getItemDescription())
                 .itemPhoto(posting.getItemPhoto())

@@ -8,6 +8,10 @@ import com.jt.borrownetapi.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,6 +50,18 @@ public class UserService implements UserDetailsService {
             return PublicUserDTO.fromUser(user);
         } else {
             return null;
+        }
+    }
+
+    public Page<PublicUserDTO> getPublicUserList(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        Page<User> pagedResult = userRepository.findAll(paging);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.map(PublicUserDTO::fromUser);
+        } else {
+            return Page.empty();
         }
     }
 

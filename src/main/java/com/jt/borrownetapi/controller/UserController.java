@@ -10,14 +10,13 @@ import com.jt.borrownetapi.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -38,6 +37,18 @@ public class UserController {
             throw new EntityNotFoundException("User does not exist.");
         } else {
             return foundUser;
+        }
+    }
+
+    @GetMapping("public/list")
+    public Page<PublicUserDTO> getPublicUserList(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                 @RequestParam(defaultValue = "10") Integer pageSize,
+                                                 @RequestParam(defaultValue = "id") String sortBy) {
+        Page<PublicUserDTO> foundUserList = userService.getPublicUserList(pageNo, pageSize, sortBy);
+        if (foundUserList == null && !foundUserList.isEmpty()) {
+            throw new EntityNotFoundException("Users do not exist.");
+        } else {
+            return foundUserList;
         }
     }
 
@@ -64,7 +75,7 @@ public class UserController {
 
     @Transactional
     @GetMapping("{id}/rate")
-    public ResponseEntity<List<RatingDTO>> getUserRatings(@PathVariable("id") Integer targetId,
+    public ResponseEntity<Page<RatingDTO>> getUserRatings(@PathVariable("id") Integer targetId,
                                                           @RequestParam(defaultValue = "0") Integer pageNo,
                                                           @RequestParam(defaultValue = "10") Integer pageSize,
                                                           @RequestParam(defaultValue = "id") String sortBy) {

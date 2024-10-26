@@ -17,8 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -51,15 +49,15 @@ public class RatingService {
         }
     }
 
-    public List<RatingDTO> getUserRatings(Integer targetId, Integer pageNo, Integer pageSize, String sortBy) {
+    public Page<RatingDTO> getUserRatings(Integer targetId, Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
         Page<Rating> pagedResult = ratingRepository.findByRatedUser_Id(targetId, paging);
 
         if(pagedResult.hasContent()) {
-            return pagedResult.getContent().stream().map(RatingDTO::fromRating).toList();
+            return pagedResult.map(RatingDTO::fromRating);
         } else {
-            return new ArrayList<RatingDTO>();
+            return Page.empty();
         }
     }
 

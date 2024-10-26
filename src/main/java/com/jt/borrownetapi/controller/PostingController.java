@@ -4,6 +4,7 @@ import com.jt.borrownetapi.dto.PostingDTO;
 import com.jt.borrownetapi.service.PostingService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
@@ -33,7 +33,7 @@ public class PostingController {
 
     @GetMapping("/list")
     @Transactional
-    public ResponseEntity<List<PostingDTO>> getPostings(@RequestParam(defaultValue = "0") Integer pageNo,
+    public ResponseEntity<Page<PostingDTO>> getPostings(@RequestParam(defaultValue = "0") Integer pageNo,
                                                         @RequestParam(defaultValue = "10") Integer pageSize,
                                                         @RequestParam(defaultValue = "id") String sortBy) throws IOException {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

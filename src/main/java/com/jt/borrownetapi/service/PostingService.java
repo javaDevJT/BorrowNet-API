@@ -17,8 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -40,15 +38,15 @@ public class PostingService {
         }
     }
 
-    public List<PostingDTO> getPostings(Integer pageNo, Integer pageSize, String sortBy) {
+    public Page<PostingDTO> getPostings(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
         Page<Posting> pagedResult = postingRepository.findAll(paging);
 
         if(pagedResult.hasContent()) {
-            return pagedResult.getContent().stream().map(PostingDTO::fromPosting).toList();
+            return pagedResult.map(PostingDTO::fromPosting);
         } else {
-            return new ArrayList<PostingDTO>();
+            return Page.empty();
         }
     }
 

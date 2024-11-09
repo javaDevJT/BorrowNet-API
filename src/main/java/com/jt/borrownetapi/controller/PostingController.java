@@ -1,5 +1,6 @@
 package com.jt.borrownetapi.controller;
 
+import com.jt.borrownetapi.dto.ItemRequestDTO;
 import com.jt.borrownetapi.dto.PostingDTO;
 import com.jt.borrownetapi.service.PostingService;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
@@ -53,6 +55,68 @@ public class PostingController {
             throw new BadCredentialsException("User is not logged in.");
         } else {
             return new ResponseEntity<>(postingService.createPosting(postingDTO),
+                    HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
+        }
+    }
+
+    @Transactional
+    @PostMapping("/request")
+    public ResponseEntity<ItemRequestDTO> createItemRequest(@RequestBody ItemRequestDTO itemRequestDTO) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails == null) {
+            throw new BadCredentialsException("User is not logged in.");
+        } else {
+            return new ResponseEntity<>(postingService.createItemRequest(itemRequestDTO),
+                    HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
+        }
+    }
+
+    @Transactional
+    @GetMapping("/{id}/requests")
+    public ResponseEntity<List<ItemRequestDTO>> listRequestsForItem(@PathVariable("id") Integer postingId) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails == null) {
+            throw new BadCredentialsException("User is not logged in.");
+        } else {
+            return new ResponseEntity<>(postingService.listRequestsForItem(postingId),
+                    HttpStatusCode.valueOf(HttpStatus.OK.value()));
+        }
+    }
+
+    @Transactional
+    @GetMapping("/requests/list")
+    public ResponseEntity<Page<ItemRequestDTO>> listRequestsForItem(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                    @RequestParam(defaultValue = "10") Integer pageSize,
+                                                    @RequestParam(defaultValue = "postingId") String sortBy) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails == null) {
+            throw new BadCredentialsException("User is not logged in.");
+        } else {
+            return new ResponseEntity<>(postingService.listUserRequests(pageNo, pageSize, sortBy),
+                    HttpStatusCode.valueOf(HttpStatus.OK.value()));
+        }
+    }
+
+    @Transactional
+    @GetMapping("/requests/review/{id}/accept")
+    public ResponseEntity<ItemRequestDTO> acceptRequest(@PathVariable("id") Integer itemRequestId) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails == null) {
+            throw new BadCredentialsException("User is not logged in.");
+        } else {
+            return new ResponseEntity<>(postingService.acceptRequest(itemRequestId),
+                    HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
+        }
+    }
+
+    @Transactional
+    @GetMapping("/requests/review/{id}/reject")
+    public ResponseEntity<ItemRequestDTO> rejectRequest(@PathVariable("id") Integer itemRequestId) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails == null) {
+            throw new BadCredentialsException("User is not logged in.");
+        } else {
+            return new ResponseEntity<>(postingService.rejectRequest(itemRequestId),
                     HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
         }
     }

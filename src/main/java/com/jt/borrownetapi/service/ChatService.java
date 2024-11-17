@@ -1,26 +1,30 @@
 package com.jt.borrownetapi.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
 import com.jt.borrownetapi.dto.ChatDTO;
 import com.jt.borrownetapi.dto.ChatSummary;
 import com.jt.borrownetapi.entity.Chat;
 import com.jt.borrownetapi.entity.User;
 import com.jt.borrownetapi.repository.ChatRepository;
 import com.jt.borrownetapi.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class ChatService {
-
+    @Autowired
     UserRepository userRepository;
 
+    @Autowired
     ChatRepository chatRepository;
 
     public ChatDTO sendChat(Integer withId, String message) {

@@ -88,6 +88,8 @@ public class PostingService {
             return ItemRequestDTO.fromItemRequest(replaceItemRequest);
         } else {
             ItemRequest itemRequest = fromItemRequestDTO(itemRequestDTO);
+            itemRequest.setRequestAccepted(false);
+            itemRequest.setRequestReviewed(false);
             itemRequestRepository.save(itemRequest);
             return ItemRequestDTO.fromItemRequest(itemRequest);
         }

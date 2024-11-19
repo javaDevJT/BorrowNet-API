@@ -20,4 +20,6 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Intege
     List<ItemRequest> findByPosting_Id(Integer id);
 
     Page<ItemRequest> findByPosting_Lender(User lender, Pageable pageable);
+
+    Page<ItemRequest> findByPosting_Borrower(User borrower, Pageable pageable);
 }

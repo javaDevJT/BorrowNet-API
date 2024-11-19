@@ -84,15 +84,29 @@ public class PostingController {
     }
 
     @Transactional
-    @GetMapping("/requests/list")
-    public ResponseEntity<Page<ItemRequestDTO>> listRequestsForItem(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                    @RequestParam(defaultValue = "10") Integer pageSize,
-                                                    @RequestParam(defaultValue = "postingId") String sortBy) {
+    @GetMapping("/requests/lender/list")
+    public ResponseEntity<Page<ItemRequestDTO>> listRequestsForItem_Lender(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                                    @RequestParam(defaultValue = "10") Integer pageSize,
+                                                                    @RequestParam(defaultValue = "postingId") String sortBy) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userDetails == null) {
             throw new BadCredentialsException("User is not logged in.");
         } else {
-            return new ResponseEntity<>(postingService.listUserRequests(pageNo, pageSize, sortBy),
+            return new ResponseEntity<>(postingService.listLenderRequests(pageNo, pageSize, sortBy),
+                    HttpStatusCode.valueOf(HttpStatus.OK.value()));
+        }
+    }
+
+    @Transactional
+    @GetMapping("/requests/borrower/list")
+    public ResponseEntity<Page<ItemRequestDTO>> listRequestsForItem_Borrower(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                                    @RequestParam(defaultValue = "10") Integer pageSize,
+                                                                    @RequestParam(defaultValue = "postingId") String sortBy) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails == null) {
+            throw new BadCredentialsException("User is not logged in.");
+        } else {
+            return new ResponseEntity<>(postingService.listBorrowerRequests(pageNo, pageSize, sortBy),
                     HttpStatusCode.valueOf(HttpStatus.OK.value()));
         }
     }

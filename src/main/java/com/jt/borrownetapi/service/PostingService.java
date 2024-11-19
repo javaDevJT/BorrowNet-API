@@ -108,7 +108,7 @@ public class PostingService {
         return itemRequestRepository.findByPosting_Id(postingId).stream().map(ItemRequestDTO::fromItemRequest).toList();
     }
 
-    public Page<ItemRequestDTO> listUserRequests(Integer pageNo, Integer pageSize, String sortBy) {
+    public Page<ItemRequestDTO> listLenderRequests(Integer pageNo, Integer pageSize, String sortBy) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userByEmail = userRepository.findByEmailIgnoreCase(userDetails.getUsername());
         if (userByEmail == null) {
@@ -116,6 +116,22 @@ public class PostingService {
         }
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<ItemRequest> pagedResult = itemRequestRepository.findByPosting_Lender(userByEmail, paging);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.map(ItemRequestDTO::fromItemRequest);
+        } else {
+            return Page.empty();
+        }
+    }
+
+    public Page<ItemRequestDTO> listBorrowerRequests(Integer pageNo, Integer pageSize, String sortBy) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userByEmail = userRepository.findByEmailIgnoreCase(userDetails.getUsername());
+        if (userByEmail == null) {
+            throw new RuntimeException("User object does not exist for security context");
+        }
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<ItemRequest> pagedResult = itemRequestRepository.findByPosting_Borrower(userByEmail, paging);
 
         if(pagedResult.hasContent()) {
             return pagedResult.map(ItemRequestDTO::fromItemRequest);

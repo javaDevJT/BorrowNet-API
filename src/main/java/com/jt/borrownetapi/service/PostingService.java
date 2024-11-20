@@ -131,7 +131,7 @@ public class PostingService {
             throw new RuntimeException("User object does not exist for security context");
         }
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<ItemRequest> pagedResult = itemRequestRepository.findByPosting_Borrower(userByEmail, paging);
+        Page<ItemRequest> pagedResult = itemRequestRepository.findByRequester(userByEmail, paging);
 
         if(pagedResult.hasContent()) {
             return pagedResult.map(ItemRequestDTO::fromItemRequest);
